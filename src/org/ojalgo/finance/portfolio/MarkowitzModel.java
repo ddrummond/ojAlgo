@@ -108,6 +108,7 @@ public final class MarkowitzModel extends EquilibriumModel {
     private boolean myShortingAllowed = false;
     private BigDecimal myTargetReturn;
     private BigDecimal myTargetVariance;
+    private BigDecimal myTargetWeightSum = ONE;
     private final Variable[] myVariables;
 
     public MarkowitzModel(final BasicMatrix covarianceMatrix, final BasicMatrix expectedExcessReturns) {
@@ -277,7 +278,7 @@ public final class MarkowitzModel extends EquilibriumModel {
             for (int i = 0; i < tmpVariables.length; i++) {
                 tmpBalanceExpression.setLinearFactor(i, ONE);
             }
-            tmpBalanceExpression.level(ONE);
+            tmpBalanceExpression.level(myTargetWeightSum);
 
             for (final Map.Entry<int[], LowerUpper> tmpConstraintSet : myConstraints.entrySet()) {
 
@@ -427,4 +428,11 @@ public final class MarkowitzModel extends EquilibriumModel {
         return super.calculatePortfolioVariance(MATRIX_FACTORY.columns(weightsVctr));
     }
 
+    public BigDecimal getGlobalTargetWeightSum() {
+        return myTargetWeightSum;
+    }
+
+    public void setGlobalTargetWeightSum(BigDecimal weightSum) {
+        this.myTargetWeightSum = weightSum;
+    }
 }
